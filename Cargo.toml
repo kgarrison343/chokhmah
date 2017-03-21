@@ -1,0 +1,8 @@
+[package]
+name = "chokhmah"
+version = "0.1.0"
+authors = ["Kyle Garrison <kgarrison343@gmail.com>"]
+
+[dependencies]
+bson = "0.4.4"
+mongodb = "0.2.3"
