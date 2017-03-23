@@ -1,14 +1,14 @@
 use bson::Bson;
 use mongodb::db::{Database, ThreadedDatabase};
 
-pub struct Orchestrator {
+pub struct DataAccess {
     /// A reference to the database to be operated on.
     pub db: Database,
 }
 
-impl Orchestrator {
-    pub fn new(db: Database) -> Orchestrator {
-        Orchestrator{
+impl DataAccess {
+    pub fn new(db: Database) -> DataAccess {
+        DataAccess{
             db: db.clone(),
         }
     }
