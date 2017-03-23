@@ -24,7 +24,8 @@ fn main() {
     let username = "kgarrison343";
 
     if orchestrator.find_username(username) {
-        println!("success!");
+        let pwd = orchestrator.get_password(username);
+        println!("username: {}\npassword: {}", username, pwd);
     }
     else {
         println!("failure!");
