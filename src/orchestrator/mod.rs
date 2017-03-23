@@ -1,9 +1,8 @@
-//use bson::Bson;
-//use mongodb::{Client, ThreadedClient};
+use bson::Bson;
 use mongodb::db::{Database, ThreadedDatabase};
 
 pub struct Orchestrator {
-    // A reference to the database to be operated on.
+    /// A reference to the database to be operated on.
     pub db: Database,
 }
 
@@ -30,5 +29,24 @@ impl Orchestrator {
                 false
             }
         }
+    }
+
+    pub fn get_password(&self, username: &str) -> String {
+        let user_doc = doc! {"username" => username};
+
+        let mut cursor = self.db.collection("users")
+            .find(Some(user_doc.clone()), None)
+            .ok().expect("failed to execute find");
+
+        let item = cursor.next();
+
+        let doc = match item {
+            Some(x) => x.ok().expect("failed to execute"),
+            _ => panic!("Password not found"),
+        };
+        return match doc.get("password") {
+            Some(&Bson::String(ref x)) => x.to_string(),
+            _ => panic!("Password was expected to be a string!"),
+        };
     }
 }
