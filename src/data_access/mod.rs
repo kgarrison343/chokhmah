@@ -49,4 +49,18 @@ impl DataAccess {
             _ => panic!("Password was expected to be a string!"),
         };
     }
+
+    pub fn insert_new_user(&self, username: &str, password: &str)
+                           -> Result<(), String> {
+        let insert_doc = doc!("username" => username,
+                             "password" => password);
+
+        let coll = self.db.collection("users");
+        let result = coll.insert_one(insert_doc, None);
+
+        return match result {
+            Ok(_) => Ok(()),
+            Err(_) => Err("An error occurred".to_string()),
+        }
+    }
 }
