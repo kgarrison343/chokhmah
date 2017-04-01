@@ -1,6 +1,7 @@
 #[macro_use(bson, doc)]
 extern crate bson;
 extern crate mongodb;
+extern crate ring;
 
 pub mod data_access;
 
