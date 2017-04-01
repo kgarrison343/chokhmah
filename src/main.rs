@@ -3,6 +3,7 @@ extern crate bson;
 extern crate mongodb;
 extern crate ring;
 
+pub mod hashing;
 pub mod data_access;
 
 //use bson::Bson;
