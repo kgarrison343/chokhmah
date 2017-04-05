@@ -7,3 +7,4 @@ authors = ["Kyle Garrison <kgarrison343@gmail.com>"]
 bson = "0.4.4"
 mongodb = "0.2.3"
 ring = "0.7.3"
+rustc-serialize = "0.3.23"

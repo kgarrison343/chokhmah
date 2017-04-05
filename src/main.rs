@@ -2,6 +2,7 @@
 extern crate bson;
 extern crate mongodb;
 extern crate ring;
+extern crate rustc_serialize;
 
 pub mod hashing;
 pub mod data_access;

@@ -1,5 +1,7 @@
 use bson::Bson;
 use mongodb::db::{Database, ThreadedDatabase};
+use rustc_serialize::base64::{ToBase64, Config, CharacterSet, Newline};
+use hashing;
 
 pub struct DataAccess {
     /// A reference to the database to be operated on.
@@ -52,8 +54,16 @@ impl DataAccess {
 
     pub fn insert_new_user(&self, username: &str, password: &str)
                            -> Result<(), String> {
+        let hashed_password = hashing::hash_password(username, password)
+            .to_base64(Config {
+                char_set: CharacterSet::Standard,
+                newline: Newline::LF,
+                pad: true,
+                line_length: None,
+            });
+        
         let insert_doc = doc!("username" => username,
-                             "password" => password);
+                              "password" => hashed_password);
 
         let coll = self.db.collection("users");
         let result = coll.insert_one(insert_doc, None);
