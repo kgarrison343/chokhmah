@@ -48,6 +48,21 @@ fn get_username_from_user() -> String {
     input
 }
 
+fn get_password_from_user() -> String {
+    let mut input = String::new();
+    print!("Password: ");
+    let _ = stdout().flush();
+    stdin().read_line(&mut input).expect("Invalid password");
+    if let Some('\n') = input.chars().next_back() {
+        input.pop();
+    }
+    if let Some('\r') = input.chars().next_back() {
+        input.pop();
+    }
+
+    input
+}
+
 fn main() {
     let db = open_chokhmah_db();
     let data_access = DataAccess::new(db);
@@ -60,8 +75,8 @@ fn main() {
     }
     else {
         println!("User does not yet exist. Please enter a password for new user: {}", username);
-        let password = "whatever for now";
+        let password = get_password_from_user();
 
-        add_new_user(&data_access, &username, password);       
+        add_new_user(&data_access, &username, &password);
     }
 }
