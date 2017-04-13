@@ -13,6 +13,8 @@ use mongodb::db::Database;
 
 use data_access::DataAccess;
 
+use std::io::{stdin,stdout,Write};
+
 fn open_chokhmah_db() -> Database {
     let client = Client::connect("localhost", 27017)
         .expect("Failed to initialize standalone client.");
@@ -31,20 +33,35 @@ fn add_new_user(data_access: &DataAccess, username: &str, password: &str) {
     }
 }
 
+fn get_username_from_user() -> String {
+    let mut input = String::new();
+    print!("Username: ");
+    let _ = stdout().flush();
+    stdin().read_line(&mut input).expect("Invalid username");
+    if let Some('\n') = input.chars().next_back() {
+        input.pop();
+    }
+    if let Some('\r') = input.chars().next_back() {
+        input.pop();
+    }
+
+    input
+}
+
 fn main() {
     let db = open_chokhmah_db();
     let data_access = DataAccess::new(db);
     
-    let username = "kgarrison";
+    let username = get_username_from_user();
 
-    if data_access.find_username(username) {
-        let pwd = data_access.get_password(username);
-        println!("username: {}\npassword: {}", username, pwd);
+    if data_access.find_username(&username) {
+        let pwd = data_access.get_password(&username);
+        println!("username: {}\npassword: {}", &username, pwd);
     }
     else {
         println!("User does not yet exist. Please enter a password for new user: {}", username);
         let password = "whatever for now";
 
-        add_new_user(&data_access, username, password);       
+        add_new_user(&data_access, &username, password);       
     }
 }
