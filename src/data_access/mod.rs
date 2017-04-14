@@ -18,7 +18,7 @@ impl DataAccess {
     pub fn find_username(&self, username: &str) -> bool {
         let user_doc = doc! {"username" => username};
 
-        let mut cursor = self.db.collection("users").find(Some(user_doc.clone()), None).ok().expect("failed to execute find");
+        let mut cursor = self.db.collection("users").find(Some(user_doc.clone()), None).expect("failed to execute find");
         
         match  cursor.next() {
             Some(Ok(_)) => {
@@ -38,18 +38,19 @@ impl DataAccess {
 
         let mut cursor = self.db.collection("users")
             .find(Some(user_doc.clone()), None)
-            .ok().expect("failed to execute find");
+            .expect("failed to execute find");
 
         let item = cursor.next();
 
         let doc = match item {
-            Some(x) => x.ok().expect("failed to execute"),
+            Some(x) => x.expect("failed to execute"),
             _ => panic!("Password not found"),
         };
-        return match doc.get("password") {
+
+        match doc.get("password") {
             Some(&Bson::String(ref x)) => x.to_string(),
             _ => panic!("Password was expected to be a string!"),
-        };
+        }
     }
 
     pub fn insert_new_user(&self, username: &str, password: &str)
@@ -68,7 +69,7 @@ impl DataAccess {
         let coll = self.db.collection("users");
         let result = coll.insert_one(insert_doc, None);
 
-        return match result {
+        match result {
             Ok(_) => Ok(()),
             Err(_) => Err("An error occurred".to_string()),
         }
