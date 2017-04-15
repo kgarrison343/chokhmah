@@ -1,6 +1,6 @@
 use bson::Bson;
 use mongodb::db::{Database, ThreadedDatabase};
-use rustc_serialize::base64::{ToBase64, Config, CharacterSet, Newline};
+use rustc_serialize::base64::*;
 use hashing;
 
 pub struct DataAccess {
@@ -33,7 +33,7 @@ impl DataAccess {
         }
     }
 
-    pub fn get_password(&self, username: &str) -> String {
+    pub fn get_password(&self, username: &str) -> Vec<u8> {
         let user_doc = doc! {"username" => username};
 
         let mut cursor = self.db.collection("users")
@@ -48,7 +48,7 @@ impl DataAccess {
         };
 
         match doc.get("password") {
-            Some(&Bson::String(ref x)) => x.to_string(),
+            Some(&Bson::String(ref x)) => x.from_base64().expect("Invalid password hash"),
             _ => panic!("Password was expected to be a string!"),
         }
     }
