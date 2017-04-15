@@ -33,7 +33,13 @@ impl DataAccess {
         }
     }
 
-    pub fn get_password(&self, username: &str) -> Vec<u8> {
+    pub fn verify_password(&self, username: &str, input_password: &str) -> bool {
+        let hash_password = self.get_password(username);
+
+        hashing::verify_password(&hashing::Credential::from(hash_password), username, input_password)
+    }
+    
+    fn get_password(&self, username: &str) -> Vec<u8> {
         let user_doc = doc! {"username" => username};
 
         let mut cursor = self.db.collection("users")

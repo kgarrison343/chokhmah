@@ -7,7 +7,6 @@ extern crate rustc_serialize;
 pub mod hashing;
 pub mod data_access;
 
-//use bson::Bson;
 use mongodb::{Client, ThreadedClient};
 use mongodb::db::Database;
 
@@ -70,8 +69,13 @@ fn main() {
     let username = get_username_from_user();
 
     if data_access.find_username(&username) {
-        //let pwd = data_access.get_password(&username);
-        //println!("username: {}\npassword: {}", &username, pwd);
+        let pwd = get_password_from_user();
+        if data_access.verify_password(&username, &pwd) {
+            println!("Welcome {}.", username);
+        }
+        else {
+            println!("Password does not match username.");
+        }
     }
     else {
         println!("User does not yet exist. Please enter a password for new user: {}", username);
